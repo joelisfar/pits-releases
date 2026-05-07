@@ -1,0 +1,43 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>Pits</title>
+        <item>
+            <title>0.2.4</title>
+            <pubDate>Thu, 07 May 2026 12:00:00 +0000</pubDate>
+            <sparkle:version>15</sparkle:version>
+            <sparkle:shortVersionString>0.2.4</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[<p>Conversation list redesign — Finder-style four-column layout with day
+grouping.</p>
+<ul>
+<li><strong>New row layout:</strong> Conversation | Cache | Context
+charge | Total. Cache shows warm/cold/new with a live countdown to
+expiry (or “Expired” for cold sessions). Context charge shows the
+projected next-turn cost — with a struck-through warm-state cost ahead
+of the cold cost on still-open cold sessions, so you can see what the
+cache miss will cost you.</li>
+<li><strong>Multi-day conversations</strong> now split into per-day
+rows, each carrying its own day’s spend. Slices get a “part N” badge so
+it’s clear they belong to one ongoing conversation.</li>
+<li><strong>Day groups</strong> (Today, Yesterday, …) get sticky section
+headers that pin to the top of the visible region as you scroll, with
+the day’s total to the right.</li>
+<li><strong>Window chrome:</strong> traffic lights, month picker, and
+column headers now share one continuous translucent panel — no visible
+seam between toolbar and column header (Finder pattern).</li>
+<li><strong>Visual polish:</strong> alternating row shading with parity
+flipped per group, pill-shaped row backgrounds, bold day labels,
+pixel-perfect column alignment from chrome through section headers down
+to row content.</li>
+<li><strong>Performance:</strong> 1Hz countdown ticks no longer stutter
+scroll on heavy histories — day groups are cached in <code>@State</code>
+and refreshed only when conversations or the selected month change; rows
+are <code>Equatable</code> so non-live rows skip body re-eval;
+Conversation cost properties are memoized at init.</li>
+</ul>
+]]></description>
+            <enclosure url="https://github.com/joelisfar/pits-releases/releases/download/v0.2.4/Pits-0.2.4.dmg" length="11142326" type="application/octet-stream" sparkle:edSignature="LA6WmsCCin9KFItglMkyGcwtJDcIlY0PsA+BrM5KOgAG2sJ+Q0LRJp0K7uEDa069AUQcQ0iyty6CtsUGXAHrCA=="/>
+        </item>
+    </channel>
+</rss>

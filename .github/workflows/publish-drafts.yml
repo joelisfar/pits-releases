@@ -1,0 +1,41 @@
+name: Publish drafts at neutral time
+
+# Runs daily at 12:00 UTC. Promotes any draft releases to published, so
+# the GitHub-recorded "created at" timestamp is normalized to a fixed
+# time of day rather than reflecting when the upstream build pipeline
+# actually fired (which would leak working hours).
+#
+# Workflow can also be invoked manually (workflow_dispatch) — useful
+# for promoting a draft outside the daily window without waiting.
+
+on:
+  schedule:
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish-drafts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Promote draft releases to published
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          # gh release list does NOT return drafts by default; --json + jq
+          # filter via the API gives us the full set including drafts.
+          drafts=$(gh api "repos/$REPO/releases" --jq '.[] | select(.draft) | .tag_name')
+
+          if [ -z "$drafts" ]; then
+            echo "No draft releases to promote."
+            exit 0
+          fi
+
+          while IFS= read -r tag; do
+            echo "Publishing $tag"
+            gh release edit "$tag" --repo "$REPO" --draft=false
+          done <<< "$drafts"
