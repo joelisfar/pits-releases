@@ -1,12 +1,18 @@
 name: Publish drafts at neutral time
 
-# Runs daily at 12:00 UTC. Promotes any draft releases to published, so
-# the GitHub-recorded "created at" timestamp is normalized to a fixed
-# time of day rather than reflecting when the upstream build pipeline
-# actually fired (which would leak working hours).
+# Promotes any draft releases to published, normalizing the GitHub-
+# recorded "created at" timestamp to a fixed time of day (12:00 UTC).
+# When promoting, also pulls the staged `appcast.xml` from the draft's
+# release assets and commits it to main — so Sparkle clients only see
+# a new version in the appcast at the same moment its download URL goes
+# live. Atomic.
 #
-# Workflow can also be invoked manually (workflow_dispatch) — useful
-# for promoting a draft outside the daily window without waiting.
+# Triggered:
+#   - daily at 12:00 UTC (cron) — the routine path
+#   - manually (workflow_dispatch) — invoked by `scripts/force-release.sh`
+#     on the source repo when the user wants to ship immediately rather
+#     than wait for the next neutral window. Force-publishing leaks the
+#     hour/minute of *that* release; routine publishes don't.
 
 on:
   schedule:
@@ -20,22 +26,88 @@ jobs:
   publish-drafts:
     runs-on: ubuntu-latest
     steps:
-      - name: Promote draft releases to published
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Promote drafts and commit appcast atomically
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          # gh release list does NOT return drafts by default; --json + jq
-          # filter via the API gives us the full set including drafts.
-          drafts=$(gh api "repos/$REPO/releases" --jq '.[] | select(.draft) | .tag_name')
+
+          # gh release list does NOT return drafts by default; the API call
+          # gives us the full set, sorted by created_at descending. We
+          # process oldest-first so the latest tag's appcast wins on main
+          # if multiple drafts get promoted in one tick.
+          drafts=$(gh api "repos/$REPO/releases" \
+            --jq '[.[] | select(.draft)] | sort_by(.created_at) | .[].tag_name')
 
           if [ -z "$drafts" ]; then
             echo "No draft releases to promote."
             exit 0
           fi
 
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           while IFS= read -r tag; do
-            echo "Publishing $tag"
-            gh release edit "$tag" --repo "$REPO" --draft=false
+            echo "→ Promoting $tag"
+
+            # Stage directory for this tag's assets. Drafts hide assets
+            # from anonymous users, but the workflow's GITHUB_TOKEN is
+            # authorized to fetch them.
+            staging="/tmp/release-assets-$tag"
+            mkdir -p "$staging"
+
+            # The source-repo workflow uploads appcast.xml alongside the
+            # dmg on the draft. If it's missing, that's a bug — abort
+            # rather than silently publishing without updating the feed.
+            if ! gh release download "$tag" \
+                  --repo "$REPO" \
+                  --pattern "appcast.xml" \
+                  --dir "$staging" \
+                  --clobber; then
+              echo "✗ $tag draft is missing appcast.xml asset — aborting" >&2
+              exit 1
+            fi
+
+            # Publish the draft. After this point its assets are public
+            # at the standard download URL referenced by the appcast.
+            gh release edit "$tag" --draft=false
+
+            # Atomically update main's appcast.xml. With concurrency:
+            # group above we can't race ourselves, but a human commit
+            # to main between the fetch and push is still possible —
+            # retry with a fresh fetch up to 3 times.
+            for attempt in 1 2 3; do
+              git fetch origin main
+              git reset --hard origin/main
+              cp "$staging/appcast.xml" ./appcast.xml
+              git add appcast.xml
+              if git diff --cached --quiet; then
+                echo "  appcast unchanged"
+                break
+              fi
+              git commit -m "release: appcast for $tag"
+              if git push origin main; then
+                echo "  ✓ appcast pushed (attempt $attempt)"
+                break
+              fi
+              echo "  push failed (attempt $attempt) — retrying"
+              sleep 5
+            done
+
+            # The staged appcast was a build artifact; remove it from
+            # the now-published release so user-facing assets stay
+            # clean (only the dmg remains).
+            gh release delete-asset "$tag" appcast.xml --yes 2>/dev/null || true
+
+            rm -rf "$staging"
           done <<< "$drafts"
+
+# Concurrency: prevent overlapping promotion runs (cron + manual trigger
+# could otherwise both fire and race on the appcast push).
+concurrency:
+  group: publish-drafts
+  cancel-in-progress: false
