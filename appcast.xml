@@ -3,41 +3,58 @@
     <channel>
         <title>Pits</title>
         <item>
-            <title>0.2.4</title>
+            <title>0.2.5</title>
             <pubDate>Thu, 07 May 2026 12:00:00 +0000</pubDate>
-            <sparkle:version>15</sparkle:version>
-            <sparkle:shortVersionString>0.2.4</sparkle:shortVersionString>
+            <sparkle:version>16</sparkle:version>
+            <sparkle:shortVersionString>0.2.5</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <description><![CDATA[<p>Conversation list redesign — Finder-style four-column layout with day
-grouping.</p>
+            <description><![CDATA[<p>Filter the conversation list by what you care about — Mail’s
+<code>View &gt; Filter</code> idiom, adapted for Pits.</p>
 <ul>
-<li><strong>New row layout:</strong> Conversation | Cache | Context
-charge | Total. Cache shows warm/cold/new with a live countdown to
-expiry (or “Expired” for cold sessions). Context charge shows the
-projected next-turn cost — with a struck-through warm-state cost ahead
-of the cold cost on still-open cold sessions, so you can see what the
-cache miss will cost you.</li>
-<li><strong>Multi-day conversations</strong> now split into per-day
-rows, each carrying its own day’s spend. Slices get a “part N” badge so
-it’s clear they belong to one ongoing conversation.</li>
-<li><strong>Day groups</strong> (Today, Yesterday, …) get sticky section
-headers that pin to the top of the visible region as you scroll, with
-the day’s total to the right.</li>
-<li><strong>Window chrome:</strong> traffic lights, month picker, and
-column headers now share one continuous translucent panel — no visible
-seam between toolbar and column header (Finder pattern).</li>
-<li><strong>Visual polish:</strong> alternating row shading with parity
-flipped per group, pill-shaped row backgrounds, bold day labels,
-pixel-perfect column alignment from chrome through section headers down
-to row content.</li>
-<li><strong>Performance:</strong> 1Hz countdown ticks no longer stutter
-scroll on heavy histories — day groups are cached in <code>@State</code>
-and refreshed only when conversations or the selected month change; rows
-are <code>Equatable</code> so non-live rows skip body re-eval;
-Conversation cost properties are memoized at init.</li>
+<li><strong>New <code>View &gt; Filter</code> submenu</strong> with a
+master <code>Enable Conversation Filter</code> command (⌘L) and three
+category sections — <code>Open state:</code>, <code>Cache state:</code>,
+and <code>Location:</code>. Each category is a strict either-or pair:
+clicking one un-checks its sibling, clicking the active one un-checks it
+(so “neither” is reachable but “both” is not). The master label flips to
+<code>Disable Conversation Filters</code> (plural) when filters are
+active in 2+ categories.</li>
+<li><strong>Toolbar funnel</strong> with a state-aware tooltip
+(<code>Filter conversations</code> ↔︎
+<code>Unfilter conversations</code>). The “on” state is signaled by a
+burnt-amber disc behind the funnel — Pits now has its own warm-amber
+accent color (formerly the system blue), which propagates through menu
+checkmarks, picker selection, and focus rings.</li>
+<li><strong>Toolbar ellipsis</strong> next to the funnel surfaces the
+same Filter content as a popover, so you can see (and edit) which
+dimensions are currently narrowing the list without going through the
+menu bar.</li>
+<li><strong>Master and sub-filters stay in sync</strong> (Mail’s
+behavior): un-checking the last active sub-filter automatically disables
+the master, and re-enabling the master with no subs checked auto-checks
+<code>Open sessions</code> as the default. The funnel’s on/off state
+always reflects whether something is actually being filtered.</li>
+<li><strong>Sub-filters compose across categories</strong> via AND. So
+<code>Open sessions + Warm cache</code> shows live, recently-touched
+conversations; add <code>Repo</code> to narrow to live recent work in
+git-tracked projects.</li>
+<li><strong>No sounds play for conversations excluded by an active
+filter</strong> — chimes for filtered-out activity are noise; gated
+automatically. Settings → Sounds carries a note explaining this.</li>
+<li><strong>Past-day slices of multi-day open conversations</strong> now
+show a hollow accent dot — visually linking them to the parent’s live
+status without overstating their own activity.</li>
+<li><strong>Project labels</strong> (the path-shaped caption above each
+conversation row) now render with per-component truncation and a middot
+separator. Single-segment captions for non-repo conversations.</li>
+<li><strong>Under the hood:</strong> conversation snapshots now track
+<code>cwd</code> and <code>gitBranch</code> per session, persisted
+across launches (cache schema bumped 4→5). The filter logic is extracted
+into testable static functions; the test suite gained ~15 cases pinning
+the new behavior.</li>
 </ul>
 ]]></description>
-            <enclosure url="https://github.com/joelisfar/pits-releases/releases/download/v0.2.4/Pits-0.2.4.dmg" length="11142326" type="application/octet-stream" sparkle:edSignature="LA6WmsCCin9KFItglMkyGcwtJDcIlY0PsA+BrM5KOgAG2sJ+Q0LRJp0K7uEDa069AUQcQ0iyty6CtsUGXAHrCA=="/>
+            <enclosure url="https://github.com/joelisfar/pits-releases/releases/download/v0.2.5/Pits-0.2.5.dmg" length="11288347" type="application/octet-stream" sparkle:edSignature="eWcjTXgDhql1mTXBA6XQ6i24OfdTmZEaLbDHAdIem7V2PA3TgeOSKhVwUyex4Tkoj4xJPjgMYx0973yg4u2wCw=="/>
         </item>
     </channel>
 </rss>
