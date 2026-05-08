@@ -3,25 +3,33 @@
     <channel>
         <title>Pits</title>
         <item>
-            <title>0.2.6</title>
-            <pubDate>Thu, 07 May 2026 12:00:00 +0000</pubDate>
-            <sparkle:version>17</sparkle:version>
-            <sparkle:shortVersionString>0.2.6</sparkle:shortVersionString>
+            <title>0.2.7</title>
+            <pubDate>Fri, 08 May 2026 12:00:00 +0000</pubDate>
+            <sparkle:version>18</sparkle:version>
+            <sparkle:shortVersionString>0.2.7</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <description><![CDATA[<ul>
-<li><strong>Tahoe / Liquid Glass chrome on macOS 26.</strong> v0.2.5
-(and earlier) shipped with the legacy AppKit/SwiftUI panel chrome on
-Tahoe even though local dev builds rendered correctly. Root cause: macOS
-gates the new design system on the SDK the binary was <em>linked</em>
-against (<code>LC_BUILD_VERSION.sdk</code> in the Mach-O header), and CI
-was building on a runner with Xcode 16 / macOS 15 SDK. CI now builds on
-<code>macos-26</code> with Xcode 26.x, so the released binary opts into
-the Tahoe rendering. No source changes — same
-<code>MACOSX_DEPLOYMENT_TARGET = 14.0</code>, just a different link-time
-SDK.</li>
+            <description><![CDATA[<p>A small UX pass plus the foundations that make the upcoming v0.3.0
+cleanup pass possible.</p>
+<ul>
+<li><strong>“Reset sound selections” button in Settings</strong>
+restores each event’s per-sound pick to the default that would have been
+chosen on a fresh install. Master “Play sound effects” toggle is
+untouched — disabling everything is preserved across reset. The button
+greys out when the master toggle is off, matching the per-row
+behavior.</li>
+<li><strong>Filter controls now sit on the trailing edge of the
+toolbar.</strong> Previously the funnel and ellipsis bunched on the left
+next to the month picker; they now align with the Total Cost column
+header on the right, which is the standard Mac toolbar shape (navigation
+on the left, contextual actions on the right).</li>
+<li><strong>Under the hood:</strong> tests now run in CI on every PR and
+push to <code>main</code>, with code coverage rendered into the workflow
+run page. 238 tests, ~3-min CI job. v0.2.7 baseline coverage is 65.99%
+on the macos-26 runner; the upcoming code-quality pass will work down
+the gap list this surfaces.</li>
 </ul>
 ]]></description>
-            <enclosure url="https://github.com/joelisfar/pits-releases/releases/download/v0.2.6/Pits-0.2.6.dmg" length="11272596" type="application/octet-stream" sparkle:edSignature="fiq7d6l/Xwo/TIEyMdlDlwm3rFBTtyv1FN8yf0Tt7ex+GrMYwY1o17TEkrbiSuRm810nPRps6KpIxXBBiCUeDA=="/>
+            <enclosure url="https://github.com/joelisfar/pits-releases/releases/download/v0.2.7/Pits-0.2.7.dmg" length="11276627" type="application/octet-stream" sparkle:edSignature="Uh7nsiBKWWUcYiQkXsnxJcLD5BNAvP9ArcvDespXhLPt1jkHVAl2yTb87HJKRL+FLauw05gM9xIvIqxmMSYWAQ=="/>
         </item>
     </channel>
 </rss>
