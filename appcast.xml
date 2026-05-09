@@ -3,33 +3,46 @@
     <channel>
         <title>Pits</title>
         <item>
-            <title>0.2.7</title>
+            <title>0.3.0</title>
             <pubDate>Fri, 08 May 2026 12:00:00 +0000</pubDate>
-            <sparkle:version>18</sparkle:version>
-            <sparkle:shortVersionString>0.2.7</sparkle:shortVersionString>
+            <sparkle:version>19</sparkle:version>
+            <sparkle:shortVersionString>0.3.0</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <description><![CDATA[<p>A small UX pass plus the foundations that make the upcoming v0.3.0
-cleanup pass possible.</p>
+            <description><![CDATA[<p>A code-quality and modernization pass — same feature surface,
+smoother under load. No new user-visible features.</p>
 <ul>
-<li><strong>“Reset sound selections” button in Settings</strong>
-restores each event’s per-sound pick to the default that would have been
-chosen on a fresh install. Master “Play sound effects” toggle is
-untouched — disabling everything is preserved across reset. The button
-greys out when the master toggle is off, matching the per-row
-behavior.</li>
-<li><strong>Filter controls now sit on the trailing edge of the
-toolbar.</strong> Previously the funnel and ellipsis bunched on the left
-next to the month picker; they now align with the Total Cost column
-header on the right, which is the standard Mac toolbar shape (navigation
-on the left, contextual actions on the right).</li>
-<li><strong>Under the hood:</strong> tests now run in CI on every PR and
-push to <code>main</code>, with code coverage rendered into the workflow
-run page. 238 tests, ~3-min CI job. v0.2.7 baseline coverage is 65.99%
-on the macos-26 runner; the upcoming code-quality pass will work down
-the gap list this surfaces.</li>
+<li><strong>Smoother list updates on heavy histories.</strong>
+<code>ConversationStore</code> migrated to the macOS 14
+<code>@Observable</code> framework. Per-property tracking replaces the
+legacy <code>ObservableObject</code> pattern that invalidated every
+observer in the conversation list on every property write. Visible
+payoff is frames not stuttering when a single piece of state changes
+(e.g. the open-tab set) while the rest of the list is unchanged.</li>
+<li><strong>Faster window appearance on cold launch.</strong> The JSONL
+backfill, the per-tick <code>~/.claude/sessions/</code> scan, and the
+init-time month-discovery walk now run off the main actor. The window
+appears immediately with the cached snapshot; live data layers in as it
+arrives.</li>
+<li><strong>Live ingestion correctness regression test.</strong> Pinned
+a subtle <code>URL.path()</code> trailing-slash mismatch in the JSONL
+watcher that, under modern URL construction
+(<code>URL.homeDirectory.appending(path: …)</code>), would silently
+classify every JSONL as a symlink-escape and discover zero files —
+freezing the conversation list on the cached snapshot from the previous
+launch. Caught in development, not in shipped binaries.</li>
+<li><strong>Under the hood:</strong> GCD replaced with Swift concurrency
+where idiomatic. Foundation API call sites swept for modern equivalents
+(<code>URL(filePath:)</code>, <code>Date.now</code>,
+<code>Duration.formatted(.time)</code> for cache TTL,
+<code>FormatStyle</code> for cost rendering, Swift <code>Regex</code>
+for model-name normalization). <code>PitsApp.swift</code> split into
+one-type-per-file. Force-unwrap on the pricing-cache URL replaced with a
+sentinel-valid fallback. Forward-looking review process documented in
+<code>CLAUDE.md</code> (audit-locked false positives + the URL
+trailing-slash gotcha). 243 tests on macos-26.</li>
 </ul>
 ]]></description>
-            <enclosure url="https://github.com/joelisfar/pits-releases/releases/download/v0.2.7/Pits-0.2.7.dmg" length="11276627" type="application/octet-stream" sparkle:edSignature="Uh7nsiBKWWUcYiQkXsnxJcLD5BNAvP9ArcvDespXhLPt1jkHVAl2yTb87HJKRL+FLauw05gM9xIvIqxmMSYWAQ=="/>
+            <enclosure url="https://github.com/joelisfar/pits-releases/releases/download/v0.3.0/Pits-0.3.0.dmg" length="11311123" type="application/octet-stream" sparkle:edSignature="Bx0SCJvO9WZ8q4jMpg26fyTl+SIrlYqbxp76VEc0zQzF3PZ6Gu7ChB+/07ogemSUMWUOzlKUxgkIdyoNAYWSBw=="/>
         </item>
     </channel>
 </rss>
