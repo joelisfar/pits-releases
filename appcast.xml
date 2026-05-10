@@ -3,51 +3,39 @@
     <channel>
         <title>Pits</title>
         <item>
-            <title>0.3.1</title>
+            <title>0.4.0</title>
             <pubDate>Sat, 09 May 2026 12:00:00 +0000</pubDate>
-            <sparkle:version>20</sparkle:version>
-            <sparkle:shortVersionString>0.3.1</sparkle:shortVersionString>
+            <sparkle:version>21</sparkle:version>
+            <sparkle:shortVersionString>0.4.0</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <description><![CDATA[<p>A testing pass that fills the three deferred coverage gaps from
-v0.3.0, plus one production bugfix surfaced while writing those tests.
-No user-visible feature changes.</p>
+            <description><![CDATA[<p>Swift 6 strict-concurrency migration. No user-visible feature
+changes; the binary behavior is identical to v0.3.1. Pits now compiles
+under Swift 6 with <code>SWIFT_STRICT_CONCURRENCY=complete</code>, so
+any future code that crosses an actor boundary unsafely is a compile
+error rather than a runtime data race.</p>
 <ul>
-<li><strong>File-rotation handling fix in the JSONL watcher.</strong>
-The existing rotation handler relied on
-<code>FileHandle.seek(toOffset:)</code> throwing past EOF — but on macOS
-that seek silently succeeds, so a truncated or rotated file was
-effectively pinned at its old offset and never re-ingested. Surfaced by
-a new regression test in this pass; fixed with an explicit
-file-size-vs-offset check. Hadn’t bitten in practice (Claude Code
-doesn’t truncate JSONL streams), but a real silent-failure mode under
-any future log-rotation scheme.</li>
-<li><strong>Live FSEvents ingestion is now covered end-to-end.</strong>
-New tests exercise append-then-discover (the trailing-slash failure mode
-that bit v0.3.0), file truncation, partial-line crossover across
-multiple rescans, and per-file batching under live multi-file appends.
-The trailing-slash bug, if reintroduced, would now break tests beyond
-the pinned regression at v0.3.0.</li>
-<li><strong><code>RemotePricing.fetch</code> is now testable.</strong>
-Added a <code>URLProtocol</code> stub and four tests covering the fetch
-path: happy path parse, non-2xx HTTP, the 4 MB body cap, and transport
-errors. Pins the v0.2.1 hardening so a regression that removes the size
-check would break a test.</li>
-<li><strong><code>UpdaterModel</code> is now testable</strong> without
-booting Sparkle. Sparkle’s KVO + delegate surface moved behind a thin
-<code>UpdaterControlling</code> protocol with a production
-<code>SparkleUpdaterAdapter</code> wrapper; the model itself no longer
-imports Sparkle. State transitions, <code>statusText</code>
-permutations, and the
-<code>canCheckForUpdates</code>/<code>sessionInProgress</code> republish
-are all unit-tested with a stub. The <code>ObservableObject</code> audit
-decision is preserved — Sparkle KVO just lives inside the adapter
-now.</li>
-<li><strong>Under the hood:</strong> test count 242 → 259 (+17). One
-production bugfix, one small refactor, zero behavior changes for end
-users.</li>
+<li><strong>Production code is concurrency-clean.</strong> Eight Swift 6
+diagnostics resolved across <code>Pricing</code>, <code>PitsApp</code>,
+<code>ConversationRowView</code>, <code>ConversationStore</code>,
+<code>LogWatcher</code>, and <code>SnapshotCache</code>. The two
+load-bearing changes are <code>LogWatcher</code> and
+<code>SnapshotCache</code> adopting <code>@unchecked Sendable</code> —
+both already serialize all mutable state through their internal
+<code>DispatchQueue</code>s; the unchecked conformance captures the
+existing-and-correct invariant the compiler can’t see. Audit-locked
+false positives #1 and #6 from v0.3.0 are re-evaluated and remain locked
+against actor conversion.</li>
+<li><strong>Test target is concurrency-clean.</strong> 22 diagnostics
+resolved across <code>ConversationListSnapshotTests</code> (now
+<code>@MainActor</code>), <code>ConversationStoreCacheTests</code>
+(switched to <code>setUp/tearDown async</code> variants), and
+<code>RemotePricingTests</code> (<code>StubURLProtocol.handler</code> is
+<code>nonisolated(unsafe)</code>).</li>
+<li><strong>Under the hood:</strong> <code>SWIFT_VERSION</code> 5.9 →
+6.0; 259 tests on macos-26.</li>
 </ul>
 ]]></description>
-            <enclosure url="https://github.com/joelisfar/pits-releases/releases/download/v0.3.1/Pits-0.3.1.dmg" length="11316289" type="application/octet-stream" sparkle:edSignature="dw2dX/41ElOgKTTNO/uveRS609K8bMYThKqk6vg7htb7cVCNS6JjzNLGsAm6wCRNICft6fl2Lfy3iXEYED/wDQ=="/>
+            <enclosure url="https://github.com/joelisfar/pits-releases/releases/download/v0.4.0/Pits-0.4.0.dmg" length="11335868" type="application/octet-stream" sparkle:edSignature="DrPNUKl+4AxtgwCNwGQvCqRya1ek8xcYQPGKWrsnXs3zyY3nCrY9Zl9mDX/QPXort2Zuq5H/R/hniygigK4GBg=="/>
         </item>
     </channel>
 </rss>
