@@ -3,88 +3,21 @@
     <channel>
         <title>Pits</title>
         <item>
-            <title>0.5.0</title>
-            <pubDate>Fri, 03 Jul 2026 12:00:00 +0000</pubDate>
-            <sparkle:version>22</sparkle:version>
-            <sparkle:shortVersionString>0.5.0</sparkle:shortVersionString>
+            <title>0.5.1</title>
+            <pubDate>Mon, 06 Jul 2026 12:00:00 +0000</pubDate>
+            <sparkle:version>23</sparkle:version>
+            <sparkle:shortVersionString>0.5.1</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <description><![CDATA[<p>The big one. What started as a testing + cleanup pass grew into Pits’
-largest release yet: accurate cost, a per-turn cost breakdown, a live
-“working vs. waiting on you” indicator, in-app Claude Code
-cache/retention controls, and a batch of reliability fixes — on top of
-the testing foundation the release was originally scoped around.</p>
+            <description><![CDATA[<p>A quick follow-up to v0.5.0: the per-turn cost breakdown now shows
+every turn.</p>
 <ul>
-<li><strong>Costs are right now.</strong> The Claude 5 family (Fable,
-Mythos) was silently priced at $0 — a whole model family missing from
-the rate table — so recent usage undercounted badly. Fixed, and Sonnet 5
-now bills at its $2/$10 introductory rate through 2026-08-31 to match
-real invoices. Rates are looked up live from the LiteLLM price feed
-daily, with the bundled table as a durable fallback.</li>
-<li><strong>Click a row to see what each turn cost.</strong> Every
-message you sent expands into a per-turn breakdown — its context charge
-and total, newest first — so you can tell which prompt was expensive and
-why, instead of staring at one opaque total.</li>
-<li><strong>See what a cache miss cost you.</strong> When a send lands
-on an expired cache, the context charge shows the warm price it
-<em>would</em> have paid, struck through, ahead of the cold price it
-actually paid — on the collapsed row, on each affected turn in the
-breakdown, and immediately while a send is still in flight.</li>
-<li><strong>Live “working vs. waiting on you.”</strong> The status dot
-is a spinning arc while Claude is working and a steady dot when the
-ball’s in your court. And a run that dies without a clean finish —
-spend-limit, an interrupt, a compaction, an API error — no longer leaves
-the row spinning forever; run-boundary markers settle it. (A 3½-hour
-phantom “working” state after a spend-limit hit is what prompted
-this.)</li>
-<li><strong>A Context Size column.</strong> Each conversation shows the
-model it’s on and how full its context window is (“Opus 4.8” over
-“461k”), in its own column paired with Context Charge — the size of the
-window, then what re-submitting it will cost next turn. In the expanded
-breakdown, every turn shows the tokens it submitted (the running context
-total, which climbs through a conversation and drops after a
-compaction), and the model name is printed on the turn where it changed,
-so a mid-conversation model switch is visible right where it
-happened.</li>
-<li><strong>“N turns” counts messages you actually sent.</strong> Slash
-commands, machine-injected wrappers, background-task notifications, and
-tool results no longer inflate the count — a turn is a message you
-typed.</li>
-<li><strong>Cache-expiry chimes only fire when a conversation is waiting
-on you.</strong> No more “your cache is about to expire” sound while
-Claude is mid-run and nobody’s waiting on the prompt.</li>
-<li><strong>Pits notices when it was killed.</strong> If macOS
-terminates Pits in the background (memory pressure while the Mac sleeps
-was the likely overnight culprit), the next launch says so instead of
-silently resuming — and Pits now shuts down cleanly on
-<code>SIGTERM</code> so a normal quit isn’t mistaken for a crash.</li>
-<li><strong>Follows the calendar on its own.</strong> Crossing midnight
-prepends a “Today” section and scrolls to it; crossing into a new month
-no longer needs a relaunch to start showing that month’s
-conversations.</li>
-<li><strong>Claude Code controls in the toolbar.</strong> Two menus —
-cache lifetime (Automatic / 5 minutes / 1 hour) and transcript retention
-— write straight to <code>~/.claude/settings.json</code>, only on your
-interaction, so you can change the cache TTL without leaving Pits.</li>
-<li><strong>Row layout refresh.</strong> A Finder-style disclosure
-chevron in the gutter (the whole left edge toggles the row), the
-status/working indicator moved up beside the project label, and the
-filter controls relocated to the leading edge next to the month
-picker.</li>
-<li><strong>Testing + cleanup foundation.</strong> The release’s
-original scope: an <em>extract-and-snapshot</em> testing convention
-(derived view state lifted into pure <code>static func</code> helpers
-that tests assert against), the <code>Thread.sleep</code> retry removed
-from <code>OpenSessionsWatcher</code>’s main-actor path, a VoiceOver
-label on the filter toggle, and
-<code>HumanTurn</code>/<code>SessionTitle</code> relocated into
-<code>Pits/Models/</code>.</li>
-<li><strong>Under the hood:</strong> cache schema → v9, so the first
-launch re-parses your history from the JSONL transcripts once —
-rebuilding turn counts and per-turn costs cleanly; 447 tests on
-<code>macos-26</code>.</li>
+<li><strong>The turn breakdown no longer caps at 12.</strong> Expanding
+a conversation row listed only the 12 most recent turns and rolled the
+rest into an “N earlier turns” summary line. It now shows every turn in
+the conversation, newest first, with no collapse.</li>
 </ul>
 ]]></description>
-            <enclosure url="https://github.com/joelisfar/pits-releases/releases/download/v0.5.0/Pits-0.5.0.dmg" length="11587598" type="application/octet-stream" sparkle:edSignature="KPuFfJFoONVGSbnjugE9xNPM9K1vIIkgoz74mlpv502GN3YGshXNhnDrb9a0AtlXghwxJGJVCM2ujxogJq/wCw=="/>
+            <enclosure url="https://github.com/joelisfar/pits-releases/releases/download/v0.5.1/Pits-0.5.1.dmg" length="11577311" type="application/octet-stream" sparkle:edSignature="Jv+hfbTvrN+4nNGjq4H4cupDICCxCzBgeQnQRyQWl0EOZm5pdG5KJKJld5G3hkEi/DVpFmHBqULPbB/q+vSpBQ=="/>
         </item>
     </channel>
 </rss>
