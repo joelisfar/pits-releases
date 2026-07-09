@@ -3,21 +3,36 @@
     <channel>
         <title>Pits</title>
         <item>
-            <title>0.5.1</title>
-            <pubDate>Mon, 06 Jul 2026 12:00:00 +0000</pubDate>
-            <sparkle:version>23</sparkle:version>
-            <sparkle:shortVersionString>0.5.1</sparkle:shortVersionString>
+            <title>0.5.2</title>
+            <pubDate>Thu, 09 Jul 2026 12:00:00 +0000</pubDate>
+            <sparkle:version>24</sparkle:version>
+            <sparkle:shortVersionString>0.5.2</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <description><![CDATA[<p>A quick follow-up to v0.5.0: the per-turn cost breakdown now shows
-every turn.</p>
+            <description><![CDATA[<p>A small polish pass on the conversation list and the per-turn
+breakdown.</p>
 <ul>
-<li><strong>The turn breakdown no longer caps at 12.</strong> Expanding
-a conversation row listed only the 12 most recent turns and rolled the
-rest into an “N earlier turns” summary line. It now shows every turn in
-the conversation, newest first, with no collapse.</li>
+<li><strong>Your first message opens the breakdown.</strong> Expanding a
+new conversation used to lead with an anonymous “(session start)” line,
+or a misleading “(continued from earlier)” on a brand-new chat. Now a
+conversation’s opening setup work folds into your first real message, so
+the breakdown starts with what you actually typed. “(continued from
+earlier)” is kept only for later days of a multi-day conversation that
+genuinely pick up where the previous day left off.</li>
+<li><strong>Command-only sessions show their command.</strong> A session
+you opened with a slash command but haven’t typed a message into yet
+(say a <code>/compact</code>) now names that command on its breakdown
+line instead of “(session start)”.</li>
+<li><strong>Total Cost carries the emphasis.</strong> In the expanded
+breakdown, the Total Cost column is now the darker, primary figure while
+the next-turn context charge sits back a shade, so the number you read
+down the column is the one that stands out.</li>
+<li><strong>Tighter list layout.</strong> Closed conversations no longer
+leave an empty gap where an open session’s status dot would sit, and the
+column header, day headers, and footer summary now line up with the
+conversation titles.</li>
 </ul>
 ]]></description>
-            <enclosure url="https://github.com/joelisfar/pits-releases/releases/download/v0.5.1/Pits-0.5.1.dmg" length="11577311" type="application/octet-stream" sparkle:edSignature="Jv+hfbTvrN+4nNGjq4H4cupDICCxCzBgeQnQRyQWl0EOZm5pdG5KJKJld5G3hkEi/DVpFmHBqULPbB/q+vSpBQ=="/>
+            <enclosure url="https://github.com/joelisfar/pits-releases/releases/download/v0.5.2/Pits-0.5.2.dmg" length="11577371" type="application/octet-stream" sparkle:edSignature="elNFg5Np+QvQ9vzpiL+j3XZLHFc1jhpLB4Mul8zuLPA8EvNF2t989xte98OUbNc6bL34i0tdL0m3T8VpGl+xDA=="/>
         </item>
     </channel>
 </rss>
