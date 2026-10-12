@@ -21,6 +21,9 @@ on:
 
 permissions:
   contents: write
+  # actions: write lets the keep-alive step below re-enable this workflow
+  # via the API, which resets GitHub's 60-day inactivity clock.
+  actions: write
 
 jobs:
   publish-drafts:
@@ -105,6 +108,24 @@ jobs:
 
             rm -rf "$staging"
           done <<< "$drafts"
+
+      # GitHub disables scheduled workflows in a repo with no commits for
+      # 60 days (happened 2026-09-08: the v0.5.2 appcast commit on July 9
+      # was the last activity, and the next release would have sat as an
+      # unpublished draft forever; `gh workflow run` fails on a disabled
+      # workflow too, so force-release.sh would also have been dead).
+      # Re-enabling the workflow via the API counts as activity and
+      # resets the clock, so each daily run keeps the next one alive
+      # even when releases are months apart. Runs last, `if: always()`,
+      # so a promotion failure above never also kills the schedule.
+      - name: Keep scheduled workflow alive
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh api --method PUT "repos/$REPO/actions/workflows/publish-drafts.yml/enable"
+          echo "✓ publish-drafts.yml re-enabled (inactivity clock reset)"
 
 # Concurrency: prevent overlapping promotion runs (cron + manual trigger
 # could otherwise both fire and race on the appcast push).
