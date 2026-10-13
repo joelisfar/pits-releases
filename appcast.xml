@@ -3,30 +3,30 @@
     <channel>
         <title>Pits</title>
         <item>
-            <title>0.5.3</title>
-            <pubDate>Fri, 09 Oct 2026 12:00:00 +0000</pubDate>
-            <sparkle:version>25</sparkle:version>
-            <sparkle:shortVersionString>0.5.3</sparkle:shortVersionString>
+            <title>0.5.4</title>
+            <pubDate>Mon, 12 Oct 2026 12:00:00 +0000</pubDate>
+            <sparkle:version>26</sparkle:version>
+            <sparkle:shortVersionString>0.5.4</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <description><![CDATA[<p>A compatibility release for macOS 27, plus groundwork for tracking
-down the occasional silent quit.</p>
+            <description><![CDATA[<p>Two toolbar refinements for macOS 27 and sharper quit
+diagnostics.</p>
 <ul>
-<li><strong>The month picker works on macOS 27 again.</strong> On macOS
-27 the toolbar’s month selector came up blank. The app itself was fine;
-the fix is that Pits is now built against the macOS 27 SDK, which is
-what the new OS needs to draw the picker. Releases are built on GitHub’s
-Xcode 27 runner from here on.</li>
-<li><strong>Silent quits are now logged.</strong> Pits occasionally
-disappeared from the menu bar and Dock without a crash report. Every
-quit trigger now leaves a note in the unified log (a termination signal,
-a quit Apple Event, or neither), and removing the status item from the
-menu bar hides the icon instead of ending the app. If Pits vanishes, the
-log will say why.</li>
-<li><strong>Sparkle updated to 2.10.0.</strong> Picks up the updater’s
-macOS 27 fixes.</li>
+<li><strong>The month selector breathes.</strong> On macOS 27 the month
+label sat tight against the edge of its toolbar bubble. It now has the
+same inset and weight as Apple’s own toolbar menus (Pages’ Zoom menu was
+the reference), and drops down with a single chevron like they do.</li>
+<li><strong>No more “Pits quit unexpectedly” pop-up.</strong> It guessed
+at a cause it couldn’t know, and it could appear when nothing had gone
+wrong. Pits still notes an unclean exit in the system log; it just
+doesn’t interrupt you about it.</li>
+<li><strong>Quit logging names the caller.</strong> When something other
+than you asks Pits to quit, the log now records which part of the system
+did the asking. This is aimed at the “Pits vanished after waking the
+Mac” problem, which was seen again on October 12 one second after a
+lid-open wake reshuffled the displays.</li>
 </ul>
 ]]></description>
-            <enclosure url="https://github.com/joelisfar/pits-releases/releases/download/v0.5.3/Pits-0.5.3.dmg" length="11563317" type="application/octet-stream" sparkle:edSignature="+g8JIoZcbHj6RlMJPKpqA+lcs+UuWVebm4C/NRA+9VmlhkDysJDRwRbNobQFuKuupSEMDJ91UKLOmj6OTfHwBw=="/>
+            <enclosure url="https://github.com/joelisfar/pits-releases/releases/download/v0.5.4/Pits-0.5.4.dmg" length="11562973" type="application/octet-stream" sparkle:edSignature="JOPfnQfXfeVKSxdBx8t/flBLoOKeq5xM0bAY4xPNeOs2tNx3iyxTLRqrIVKuTX39XHgkCA5UeGVve4dbNpFwAg=="/>
         </item>
     </channel>
 </rss>
